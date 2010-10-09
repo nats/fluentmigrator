@@ -122,8 +122,7 @@ namespace FluentMigrator.Runner.Generators
 
 			if (column.DefaultValue != null)
 			{
-				sb.Append(" DEFAULT ");
-				sb.Append(GetConstantValue(column.DefaultValue));
+				sb.Append(GetDefaultConstraint(column));
 			}
 
 			if (column.IsIdentity)
@@ -137,6 +136,11 @@ namespace FluentMigrator.Runner.Generators
 			}
 
 			return sb.ToString();
+		}
+
+		protected virtual string GetDefaultConstraint(ColumnDefinition column)
+		{
+			return " DEFAULT " + GetConstantValue(column.DefaultValue);
 		}
 
 		protected string GetColumnDDL(CreateTableExpression expression)

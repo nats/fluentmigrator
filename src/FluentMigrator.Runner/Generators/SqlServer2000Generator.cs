@@ -275,5 +275,10 @@ namespace FluentMigrator.Runner.Generators
 			}
 			return result.TrimEnd(',');
 		}
+
+		protected override string GetDefaultConstraint(ColumnDefinition column)
+		{
+			return String.Format(" CONSTRAINT DF_{0}_{1} ", column.TableName, column.Name) + base.GetDefaultConstraint(column);
+		}
 	}
 }

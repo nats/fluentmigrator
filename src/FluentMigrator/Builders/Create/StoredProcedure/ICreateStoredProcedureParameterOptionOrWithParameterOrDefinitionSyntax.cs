@@ -1,0 +1,7 @@
+namespace FluentMigrator.Builders.Create.StoredProcedure
+{
+	public interface ICreateStoredProcedureParameterOptionOrWithParameterOrDefinitionSyntax : ICreateStoredProcedureWithColumnOrDefinitionSyntax
+	{
+		ICreateStoredProcedureWithColumnOrDefinitionSyntax WithDefaultValue(object value);
+	}
+}

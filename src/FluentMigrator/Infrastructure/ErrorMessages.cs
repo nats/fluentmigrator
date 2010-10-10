@@ -16,6 +16,7 @@
 //
 #endregion
 
+using System;
 
 namespace FluentMigrator.Infrastructure
 {
@@ -40,5 +41,7 @@ namespace FluentMigrator.Infrastructure
 		public const string SqlStatementCannotBeNullOrEmpty = "The sql statement cannot be null or an empty string";
 		public const string SqlScriptCannotBeNullOrEmpty = "The sql script cannot be null or an empty string";
 		public const string OperationCannotBeNull = "The operation to be performed using the database connection cannot be null";
+		public const string StoredProcedureNameCanNotBeNullOrEmpty = "The stored procedure name cannot be null or empty";
+		public const string StoredProcedureDefinitionCanNotBeNullOrEmpty = "The stored procedure must have a Sql or Script definition";
 	}
 }

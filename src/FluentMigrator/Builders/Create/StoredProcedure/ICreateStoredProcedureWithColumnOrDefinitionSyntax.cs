@@ -9,7 +9,6 @@ namespace FluentMigrator.Builders.Create.StoredProcedure
 	public interface ICreateStoredProcedureWithColumnOrDefinitionSyntax : IFluentSyntax
 	{
 		void Sql(string sqlStatements);
-		void Script(string pathToSqlStatements);
 		ICreateStoredProcedureParameterAsTypeSyntax WithParameter(string parameterName);
 	}
 }

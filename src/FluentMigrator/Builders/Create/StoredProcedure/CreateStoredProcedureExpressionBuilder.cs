@@ -20,11 +20,6 @@ namespace FluentMigrator.Builders.Create.StoredProcedure
 			Expression.SqlStatements = sqlStatements;
 		}
 
-		public void Script(string pathToSqlStatements)
-		{
-			Expression.SqlScript = pathToSqlStatements;
-		}
-
 		public ICreateStoredProcedureWithColumnOrDefinitionSyntax Comment(string comment)
 		{
 			Expression.Comment = comment;

@@ -30,14 +30,6 @@ namespace FluentMigrator.Tests.Unit.Builders.Create
 		}
 
 		[Test]
-		public void BasicScriptUsage()
-		{
-			builder.Script(@"C:\MyScript.sql");
-
-			expression.SqlScript.ShouldBe(@"C:\MyScript.sql");
-		}
-
-		[Test]
 		public void Comment()
 		{
 			builder.Comment(COMMENT);

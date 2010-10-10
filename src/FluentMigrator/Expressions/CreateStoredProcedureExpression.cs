@@ -11,7 +11,6 @@ namespace FluentMigrator.Expressions
 	{
 		public string Name { get; set; }
 		public string SqlStatements { get; set; }
-		public string SqlScript { get; set; }
 		public string Comment { get; set; }
 		public IList<ColumnDefinition> Parameters { get; set; }
 
@@ -25,7 +24,7 @@ namespace FluentMigrator.Expressions
 			if (String.IsNullOrEmpty(Name))
 				errors.Add(ErrorMessages.StoredProcedureNameCanNotBeNullOrEmpty);
 
-			if (String.IsNullOrEmpty(SqlStatements) && String.IsNullOrEmpty(SqlScript))
+			if (String.IsNullOrEmpty(SqlStatements))
 				errors.Add(ErrorMessages.StoredProcedureDefinitionCanNotBeNullOrEmpty);
 
 			foreach (var parameter in Parameters)

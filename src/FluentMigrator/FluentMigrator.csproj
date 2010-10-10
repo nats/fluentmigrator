@@ -128,6 +128,11 @@
     <Compile Include="Builders\Create\Index\ICreateIndexOnColumnOrInSchemaSyntax.cs" />
     <Compile Include="Builders\Create\Index\ICreateIndexColumnOptionsSyntax.cs" />
     <Compile Include="Builders\Create\Index\ICreateIndexOptionsSyntax.cs" />
+    <Compile Include="Builders\Create\StoredProcedure\CreateStoredProcedureExpressionBuilder.cs" />
+    <Compile Include="Builders\Create\StoredProcedure\ICreateStoredProcedureParameterAsTypeSyntax.cs" />
+    <Compile Include="Builders\Create\StoredProcedure\ICreateStoredProcedureParameterOptionOrWithParameterOrDefinitionSyntax.cs" />
+    <Compile Include="Builders\Create\StoredProcedure\ICreateStoredProcedureRootSyntax.cs" />
+    <Compile Include="Builders\Create\StoredProcedure\ICreateStoredProcedureWithColumnOrDefinitionSyntax.cs" />
     <Compile Include="Builders\Create\Table\ICreateTableWithColumnOrSchemaSyntax.cs" />
     <Compile Include="Builders\Delete\DeleteDataExpressionBuilder.cs" />
     <Compile Include="Builders\Delete\ForeignKey\IDeleteForeignKeyForeignColumnOrInSchemaSyntax.cs" />
@@ -150,7 +155,9 @@
     <Compile Include="Builders\Rename\Table\IRenameTableToOrInSchemaSyntax.cs" />
     <Compile Include="Expressions\AlterColumnExpression.cs" />
     <Compile Include="Expressions\AlterDefaultConstraintExpression.cs" />
+    <Compile Include="Expressions\CreateStoredProcedureExpression.cs" />
     <Compile Include="Expressions\DeleteDataExpression.cs" />
+    <Compile Include="Expressions\DeleteStoredProcedureExpression.cs" />
     <Compile Include="Expressions\InsertDataExpression.cs" />
     <Compile Include="Builders\Insert\InsertDataExpressionBuilder.cs" />
     <Compile Include="Builders\Insert\InsertExpressionRoot.cs" />

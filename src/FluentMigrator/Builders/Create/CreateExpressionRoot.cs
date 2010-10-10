@@ -19,6 +19,7 @@
 using FluentMigrator.Builders.Create.Column;
 using FluentMigrator.Builders.Create.ForeignKey;
 using FluentMigrator.Builders.Create.Index;
+using FluentMigrator.Builders.Create.StoredProcedure;
 using FluentMigrator.Builders.Create.Table;
 using FluentMigrator.Expressions;
 using FluentMigrator.Infrastructure;
@@ -80,6 +81,13 @@ namespace FluentMigrator.Builders.Create
 			var expression = new CreateIndexExpression { Index = { Name = indexName } };
 			_context.Expressions.Add(expression);
 			return new CreateIndexExpressionBuilder(expression);
+		}
+
+		public ICreateStoredProcedureRootSyntax StoredProcedure(string procedureName)
+		{
+			var expression = new CreateStoredProcedureExpression {Name = procedureName};
+			_context.Expressions.Add(expression);
+			return new CreateStoredProcedureExpressionBuilder(expression);
 		}
 	}
 }

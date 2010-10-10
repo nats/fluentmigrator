@@ -19,6 +19,7 @@
 using FluentMigrator.Builders.Create.Column;
 using FluentMigrator.Builders.Create.ForeignKey;
 using FluentMigrator.Builders.Create.Index;
+using FluentMigrator.Builders.Create.StoredProcedure;
 using FluentMigrator.Builders.Create.Table;
 using FluentMigrator.Infrastructure;
 
@@ -33,5 +34,6 @@ namespace FluentMigrator.Builders.Create
 		ICreateForeignKeyFromTableSyntax ForeignKey(string foreignKeyName);
 		ICreateIndexForTableSyntax Index();
 		ICreateIndexForTableSyntax Index(string indexName);
+		ICreateStoredProcedureRootSyntax StoredProcedure(string procedureName);
 	}
 }

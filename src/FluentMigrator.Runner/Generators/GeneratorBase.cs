@@ -51,7 +51,77 @@ namespace FluentMigrator.Runner.Generators
 		public abstract string Generate(RenameColumnExpression expression);
 		public abstract string Generate(InsertDataExpression expression);
 		public abstract string Generate(AlterDefaultConstraintExpression expression);
-		public abstract string Generate(DeleteDataExpression expression);
+
+	    public abstract string Generate(DeleteDataExpression expression);
+		
+		public virtual string Generate(CreateStoredProcedureExpression expression)
+		{
+			throw new NotImplementedException();	
+		}
+
+		public virtual string Generate(DeleteStoredProcedureExpression expression)
+		{
+			throw new NotImplementedException();
+		}
+
+		protected virtual string GenerateDDLForColumn(ColumnDefinition column)
+		{
+			var sb = new StringBuilder();
+
+			sb.Append(column.Name);
+			sb.Append(" ");
+
+			if (column.Type.HasValue)
+			{
+				sb.Append(GetTypeMap(column.Type.Value, column.Size, column.Precision));
+			}
+			else
+			{
+				sb.Append(column.CustomType);
+			}
+
+			if (!column.IsNullable)
+			{
+				sb.Append(" NOT NULL");
+			}
+
+			if (!(column.DefaultValue is ColumnDefinition.UndefinedDefaultValue))
+			{
+				sb.Append(" DEFAULT ");
+				sb.Append(Constant.Format(column.DefaultValue));
+			}
+
+			if (column.IsIdentity)
+			{
+				sb.Append(" IDENTITY(1,1)");
+			}
+
+			if (column.IsPrimaryKey)
+			{
+				sb.Append(" PRIMARY KEY CLUSTERED");
+			}
+
+			return sb.ToString();
+		}
+
+		protected string GetColumnDDL(CreateTableExpression expression)
+		{
+			IList<ColumnDefinition> columns = expression.Columns;
+			string result = "";
+			int total = columns.Count - 1;
+
+			//if more than one column is a primary key or the primary key is given a name, then it needs to be added separately
+			IList<ColumnDefinition> primaryKeyColumns = GetPrimaryKeyColumns(columns);
+			bool addPrimaryKeySeparately = false;
+			if (primaryKeyColumns.Count > 1
+				|| (primaryKeyColumns.Count == 1 && primaryKeyColumns[0].PrimaryKeyName != null))
+			{
+				addPrimaryKeySeparately = true;
+				foreach (ColumnDefinition column in primaryKeyColumns)
+				{
+					column.IsPrimaryKey = false;
+				}
+			}
 
 		protected IColumn Column
 		{

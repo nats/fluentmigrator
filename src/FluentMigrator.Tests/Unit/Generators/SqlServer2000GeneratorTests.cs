@@ -344,4 +344,132 @@ namespace FluentMigrator.Tests.Unit.Generators
 			return expression;
 		}
 	}
+
+	[TestFixture]
+	public class SqlServer2000GeneratorStoredProcedureTests : SqlServer2000GeneratorTests
+	{
+		private const string CREATE_LINE = "CREATE PROCEDURE MyProc\n";
+		private const string DEFINITION_LINE = "AS\nSELECT * FROM TABLE";
+		private const string BASIC_DEFINITION = CREATE_LINE + DEFINITION_LINE;
+
+		[Test]
+		public void SimpleUsage()
+		{
+			var expression = BasicExpression();
+
+			generator.Generate(expression).ShouldBe(
+				BASIC_DEFINITION);
+		}
+
+		[Test]
+		public void OneLineComment()
+		{
+			var expression = BasicExpression();
+			expression.Comment = "My comment";
+
+			generator.Generate(expression).ShouldBe(
+				"-- My comment\n" + BASIC_DEFINITION);
+		}
+
+		[Test]
+		public void TwoLineComment()
+		{
+			var expression = BasicExpression();
+			expression.Comment = "First line\nSecond line\n";
+			generator.Generate(expression).ShouldBe(
+				"-- First line\n-- Second line\n\n" + BASIC_DEFINITION);
+		}
+
+		[Test]
+		public void PreformattedComment()
+		{
+			var expression = BasicExpression();
+			expression.Comment = "-- My comment";
+
+			generator.Generate(expression).ShouldBe(
+				"-- My comment\n" + BASIC_DEFINITION);
+		}
+
+		[Test]
+		public void PreformattedCommentWithBlankLine()
+		{
+			var expression = BasicExpression();
+			expression.Comment = "-- First line\n\n-- Second line\n";
+
+			generator.Generate(expression).ShouldBe(
+				"-- First line\n\n-- Second line\n\n" + BASIC_DEFINITION);
+		}
+
+		[Test]
+		public void SingleParameter()
+		{
+			var expression = BasicExpression();
+			expression.Parameters.Add( new ColumnDefinition { Name="Param1", Type=DbType.Int32 });
+
+			generator.Generate(expression).ShouldBe(
+				CREATE_LINE + "@Param1 INT\n" + DEFINITION_LINE);
+		}
+
+		[Test]
+		public void SingleParameterWithDefault()
+		{
+			var expression = BasicExpression();
+			expression.Parameters.Add(new ColumnDefinition { Name = "Param1", Type = DbType.Int32, DefaultValue = 0 });
+
+			generator.Generate(expression).ShouldBe(
+				CREATE_LINE + "@Param1 INT = 0\n" + DEFINITION_LINE);
+		}
+
+		[Test]
+		public void SingleParameterWithNullDefault()
+		{
+			var expression = BasicExpression();
+			expression.Parameters.Add(new ColumnDefinition { Name = "Param1", Type = DbType.Int32, DefaultValue = null });
+
+			generator.Generate(expression).ShouldBe(
+				CREATE_LINE + "@Param1 INT = NULL\n" + DEFINITION_LINE);
+		}
+
+		[Test]
+		public void MultipleParameters()
+		{
+			var expression = BasicExpression();
+			expression.Parameters.Add(new ColumnDefinition { Name = "Param1", Type = DbType.Int32 });
+			expression.Parameters.Add(new ColumnDefinition { Name = "Param2", Type = DbType.DateTime });
+			expression.Parameters.Add(new ColumnDefinition { Name = "Param3", Type = DbType.String, Size = 128 });
+
+			generator.Generate(expression).ShouldBe(
+				CREATE_LINE + "@Param1 INT,\n@Param2 DATETIME,\n@Param3 NVARCHAR(128)\n" + DEFINITION_LINE);
+			
+		}
+
+		[Test]
+		public void CompleteExample()
+		{
+			var expression = BasicExpression();
+			expression.Comment = "My comment";
+			expression.Parameters.Add(new ColumnDefinition { Name = "Param1", Type = DbType.Int32, DefaultValue = null });
+			expression.Parameters.Add(new ColumnDefinition { Name = "Param2", Type = DbType.DateTime });
+			expression.Parameters.Add(new ColumnDefinition { Name = "Param3", Type = DbType.String, Size = 128, DefaultValue = "Default Value" });
+
+			generator.Generate(expression).ShouldBe(
+				"-- My comment\n" + CREATE_LINE + "@Param1 INT = NULL,\n@Param2 DATETIME,\n@Param3 NVARCHAR(128) = 'Default Value'\n" + DEFINITION_LINE);
+		}
+
+		[Test]
+		public void Delete()
+		{
+			var expression = new DeleteStoredProcedureExpression() {Name = "MyProc"};
+
+			generator.Generate(expression).ShouldBe(
+				"DROP PROCEDURE MyProc");
+
+		}
+
+
+		private CreateStoredProcedureExpression BasicExpression()
+		{
+			return new CreateStoredProcedureExpression() {Name = "MyProc", SqlStatements = "SELECT * FROM TABLE"};
+		}
+	}
 }

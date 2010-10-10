@@ -176,37 +176,69 @@ namespace FluentMigrator.Runner.Generators
 			return result.ToString();
 		}
 
-		public override string Generate(DeleteDataExpression expression)
+        public override string Generate(DeleteDataExpression expression)
+        {
+            var result = new StringBuilder();
+
+            if (expression.IsAllRows)
+            {
+                result.Append(String.Format("DELETE FROM {0}[{1}];", FormatSchema(expression.SchemaName), expression.TableName));
+            }
+            else
+            {
+                foreach (var row in expression.Rows)
+                {
+                    var where = String.Empty;
+                    var i = 0;
+
+                    foreach (var item in row)
+                    {
+                        if (i != 0)
+                        {
+                            where += " AND ";
+                        }
+
+                        where += String.Format("[{0}] = {1}", item.Key, Constant.Format(item.Value));
+                        i++;
+                    }
+
+                    result.Append(String.Format("DELETE FROM {0}[{1}] WHERE {2};", FormatSchema(expression.SchemaName), expression.TableName, where));
+                }
+            }
+            
+            return result.ToString();
+        }
+
+		public override string Generate(CreateStoredProcedureExpression expression)
 		{
 			var result = new StringBuilder();
 
-			if (expression.IsAllRows)
-			{
-				result.Append(String.Format("DELETE FROM {0}[{1}];", FormatSchema(expression.SchemaName), expression.TableName));
+			if (!String.IsNullOrEmpty(expression.Comment)) {
+				foreach (string line in expression.Comment.Replace("\r\n", "\n").Split('\n'))
+					result.AppendFormat("{1}{0}\n", line,
+					                    line.Trim() != string.Empty && !line.Trim().StartsWith("--") ? "-- " : string.Empty);
 			}
-			else
-			{
-				foreach (var row in expression.Rows)
-				{
-					var where = String.Empty;
-					var i = 0;
 
-					foreach (var item in row)
-					{
-						if (i != 0)
-						{
-							where += " AND ";
-						}
+			result.AppendFormat("CREATE PROCEDURE {0}\n", expression.Name);
 
-						where += String.Format("[{0}] = {1}", item.Key, Constant.Format(item.Value));
-						i++;
-					}
+			foreach (var parameter in expression.Parameters) {
+				result.AppendFormat("@{0} {1}", parameter.Name, GetTypeMap(parameter.Type.Value, parameter.Size, parameter.Precision));
 
-					result.Append(String.Format("DELETE FROM {0}[{1}] WHERE {2};", FormatSchema(expression.SchemaName), expression.TableName, where));
-				}
+				if (!(parameter.DefaultValue is ColumnDefinition.UndefinedDefaultValue))
+					result.AppendFormat(" = {0}", Constant.Format(parameter.DefaultValue));
+
+				result.AppendFormat("{0}\n", expression.Parameters[expression.Parameters.Count-1] != parameter ? "," : string.Empty);
 			}
-			
+
+			result.Append("AS\n");
+			result.Append(expression.SqlStatements);
+
 			return result.ToString();
+		}
+
+		public override string Generate(DeleteStoredProcedureExpression expression)
+		{
+			return String.Format("DROP PROCEDURE {0}", expression.Name);
 		}
 
 		public override string Generate(AlterDefaultConstraintExpression expression)

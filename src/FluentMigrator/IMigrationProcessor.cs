@@ -52,6 +52,8 @@ namespace FluentMigrator
 		void Process(InsertDataExpression expression);
 		void Process(AlterDefaultConstraintExpression expression);
 		void Process(PerformDBOperationExpression expression);
-		void Process(DeleteDataExpression expression);
+	    void Process(DeleteDataExpression expression);
+		void Process(CreateStoredProcedureExpression expression);
+		void Process(DeleteStoredProcedureExpression expression);
 	}
 }

@@ -110,6 +110,16 @@ namespace FluentMigrator.Runner.Processors
 			Process(Generator.Generate(expression));
 		}
 
+		public void Process(CreateStoredProcedureExpression expression)
+		{
+			Process(Generator.Generate(expression));
+		}
+
+		public void Process(DeleteStoredProcedureExpression expression)
+		{
+			Process(Generator.Generate(expression));
+		}
+
 		public void Process(AlterDefaultConstraintExpression expression)
 		{
 			Process(Generator.Generate(expression));

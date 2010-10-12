@@ -176,52 +176,54 @@ namespace FluentMigrator.Runner.Generators
 			return result.ToString();
 		}
 
-        public override string Generate(DeleteDataExpression expression)
-        {
-            var result = new StringBuilder();
+		public override string Generate(DeleteDataExpression expression)
+		{
+			var result = new StringBuilder();
 
-            if (expression.IsAllRows)
-            {
-                result.Append(String.Format("DELETE FROM {0}[{1}];", FormatSchema(expression.SchemaName), expression.TableName));
-            }
-            else
-            {
-                foreach (var row in expression.Rows)
-                {
-                    var where = String.Empty;
-                    var i = 0;
+			if (expression.IsAllRows)
+			{
+				result.Append(String.Format("DELETE FROM {0}[{1}];", FormatSchema(expression.SchemaName), expression.TableName));
+			}
+			else
+			{
+				foreach (var row in expression.Rows)
+				{
+					var where = String.Empty;
+					var i = 0;
 
-                    foreach (var item in row)
-                    {
-                        if (i != 0)
-                        {
-                            where += " AND ";
-                        }
+					foreach (var item in row)
+					{
+						if (i != 0)
+						{
+							where += " AND ";
+						}
 
-                        where += String.Format("[{0}] = {1}", item.Key, Constant.Format(item.Value));
-                        i++;
-                    }
+						where += String.Format("[{0}] = {1}", item.Key, Constant.Format(item.Value));
+						i++;
+					}
 
-                    result.Append(String.Format("DELETE FROM {0}[{1}] WHERE {2};", FormatSchema(expression.SchemaName), expression.TableName, where));
-                }
-            }
-            
-            return result.ToString();
-        }
+					result.Append(String.Format("DELETE FROM {0}[{1}] WHERE {2};", FormatSchema(expression.SchemaName), expression.TableName, where));
+				}
+			}
+			
+			return result.ToString();
+		}
 
 		public override string Generate(CreateStoredProcedureExpression expression)
 		{
 			var result = new StringBuilder();
 
-			if (!String.IsNullOrEmpty(expression.Comment)) {
+			if (!String.IsNullOrEmpty(expression.Comment))
+			{
 				foreach (string line in expression.Comment.Replace("\r\n", "\n").Split('\n'))
 					result.AppendFormat("{1}{0}\n", line,
-					                    line.Trim() != string.Empty && !line.Trim().StartsWith("--") ? "-- " : string.Empty);
+										line.Trim() != string.Empty && !line.Trim().StartsWith("--") ? "-- " : string.Empty);
 			}
 
 			result.AppendFormat("CREATE PROCEDURE {0}\n", expression.Name);
 
-			foreach (var parameter in expression.Parameters) {
+			foreach (var parameter in expression.Parameters)
+			{
 				result.AppendFormat("@{0} {1}", parameter.Name, GetTypeMap(parameter.Type.Value, parameter.Size, parameter.Precision));
 
 				if (!(parameter.DefaultValue is ColumnDefinition.UndefinedDefaultValue))

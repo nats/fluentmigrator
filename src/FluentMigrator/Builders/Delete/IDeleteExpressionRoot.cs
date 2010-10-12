@@ -30,7 +30,7 @@ namespace FluentMigrator.Builders.Delete
 		IDeleteForeignKeyFromTableSyntax ForeignKey();
 		IDeleteForeignKeyOnTableSyntax ForeignKey(string foreignKeyName);
 		IDeleteDataOrInSchemaSyntax FromTable(string tableName);
-	    IDeleteDataOrInSchemaSyntax FromTable(string tableName);
+		IDeleteDataOrInSchemaSyntax FromTable(string tableName);
 		void StoredProcedure(string procedureName);
 	}
 }

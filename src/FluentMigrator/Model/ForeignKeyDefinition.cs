@@ -31,6 +31,8 @@ namespace FluentMigrator.Model
 		public virtual string PrimaryTableSchema { get; set; }
 		public virtual ICollection<string> ForeignColumns { get; set; }
 		public virtual ICollection<string> PrimaryColumns { get; set; }
+		public virtual ForeignKeyAction OnDelete { get; set; }
+		public virtual ForeignKeyAction OnUpdate { get; set; }
 
 		public ForeignKeyDefinition()
 		{

@@ -94,10 +94,11 @@ namespace FluentMigrator.Tests.Unit.Generators
 			expression.ForeignKey.ForeignTable = "TestForeignTable";
 			expression.ForeignKey.PrimaryColumns = new[] { "Column1", "Column2" };
 			expression.ForeignKey.ForeignColumns = new[] { "Column3", "Column4" };
+			expression.ForeignKey.OnDelete = ForeignKeyAction.Cascade;
 
 			var sql = generator.Generate(expression);
 			sql.ShouldBe(
-				"ALTER TABLE [TestForeignTable] ADD CONSTRAINT FK_Test FOREIGN KEY ([Column3],[Column4]) REFERENCES [TestPrimaryTable] ([Column1],[Column2])");
+				"ALTER TABLE [TestForeignTable] ADD CONSTRAINT FK_Test FOREIGN KEY ([Column3],[Column4]) REFERENCES [TestPrimaryTable] ([Column1],[Column2]) ON DELETE CASCADE");
 		}
 
 		[Test]

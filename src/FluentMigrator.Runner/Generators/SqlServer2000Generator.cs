@@ -73,7 +73,7 @@ namespace FluentMigrator.Runner.Generators
 			var primaryColumns = GetColumnList(expression.ForeignKey.PrimaryColumns);
 			var foreignColumns = GetColumnList(expression.ForeignKey.ForeignColumns);
 
-			const string sql = "ALTER TABLE {0}[{1}] ADD CONSTRAINT {2} FOREIGN KEY ({3}) REFERENCES {4}[{5}] ({6})";
+			const string sql = "ALTER TABLE {0}[{1}] ADD CONSTRAINT {2} FOREIGN KEY ({3}) REFERENCES {4}[{5}] ({6}){7}{8}";
 
 			return string.Format(sql,
 								FormatSchema(expression.ForeignKey.ForeignTableSchema),
@@ -82,7 +82,9 @@ namespace FluentMigrator.Runner.Generators
 								foreignColumns,
 								FormatSchema(expression.ForeignKey.PrimaryTableSchema),
 								expression.ForeignKey.PrimaryTable,
-								primaryColumns
+								primaryColumns,
+								expression.ForeignKey.OnUpdate == ForeignKeyAction.Cascade ? " ON UPDATE CASCADE" : string.Empty,
+								expression.ForeignKey.OnDelete == ForeignKeyAction.Cascade ? " ON DELETE CASCADE" : string.Empty
 				);
 		}
 
